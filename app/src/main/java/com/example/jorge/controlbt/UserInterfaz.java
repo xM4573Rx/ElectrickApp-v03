@@ -95,30 +95,42 @@ public class UserInterfaz extends AppCompatActivity {
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == handlerState) {
-                    String dataInPrint;
+
+                    String Dato;
+                    String WattHora;
                     String readMessage = (String) msg.obj;
                     DataStringIN.append(readMessage);
 
-                   // tv2.setText(readMessage);
-
                     int StartOfLineIndex = DataStringIN.indexOf("[");
-                    int EndOfLineIndex=DataStringIN.indexOf("]");
 
-                    if ((StartOfLineIndex > -1) & (EndOfLineIndex > -1)) {
-                        dataInPrint = DataStringIN.substring(DataStringIN.indexOf("#") + 1, DataStringIN.indexOf("*"));
 
-                        double wattactual = Float.valueOf(dataInPrint);
-                        double costwatt = 466.14;
+                    if ((StartOfLineIndex > -1) ) {
 
-                        double cost = wattactual*costwatt*0.001;
+                        int EndOfLineIndex=DataStringIN.indexOf("]",StartOfLineIndex);
+                        if((EndOfLineIndex > -1)) {
+                            Dato=DataStringIN.substring(StartOfLineIndex+1, EndOfLineIndex);//<-<- PARTE A MODIFICAR >->->
+                            if(!(Dato.length()<=2)) {
 
-                        String costtext = String.valueOf(new DecimalFormat("##.##").format(cost));
+                                WattHora = Dato.substring(Dato.indexOf("#") + 1, Dato.indexOf("*"));
+                                double wattactual = Float.valueOf(WattHora);
+                                double costwatt = 466.14;
+                                double cost = wattactual * costwatt * 0.001;
+                                String costtext = String.valueOf(new DecimalFormat("##.##").format(cost));
+                                watts.setText(Dato.substring(0, Dato.indexOf("#")));//<-<- PARTE A MODIFICAR >->->
+                                tv2.setText(WattHora + " Wh");
+                                tv3.setText("$ " + costtext);
 
-                        watts.setText(DataStringIN.substring(0, DataStringIN.indexOf("#")));//<-<- PARTE A MODIFICAR >->->
-                        tv2.setText(dataInPrint + " Wh");
-                        tv3.setText("$ " + costtext);
+                            }else{
+                                Toast.makeText(UserInterfaz.this,"MODULO SIN ALIMENTACION", Toast.LENGTH_SHORT).show();
+                            }
 
-                        DataStringIN.delete(0, DataStringIN.length());
+                            StartOfLineIndex = -1;
+                            EndOfLineIndex = -1;
+                            DataStringIN.delete(0, DataStringIN.length());
+                        }
+
+
+
                     }
                 }
             }
