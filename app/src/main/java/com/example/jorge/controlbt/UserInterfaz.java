@@ -5,8 +5,11 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,6 +24,9 @@ import java.util.UUID;
 public class UserInterfaz extends AppCompatActivity {
 
     //1)
+    TabLayout MyTabs;
+    ViewPager MyPage;
+
     TextView watts;
     TextView tv1, tv2, tv3;
     //-------------------------------------------
@@ -42,6 +48,9 @@ public class UserInterfaz extends AppCompatActivity {
         setContentView(R.layout.activity_user_interfaz);
         //2)
         //Enlaza los controles con sus respectivas vistas
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         watts = (TextView) findViewById(R.id.IdBufferIn);
         tv1 = (TextView) findViewById(R.id.txt_precio_watt);
         tv2 = (TextView) findViewById(R.id.textView2);
@@ -50,6 +59,9 @@ public class UserInterfaz extends AppCompatActivity {
         btAdapter = BluetoothAdapter.getDefaultAdapter(); // get Bluetooth adapter
         VerificarEstadoBT();
 
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("ElectrickApp");
         // Configuracion onClick listeners para los botones
         // para indicar que se realizara cuando se detecte
         // el evento de Click
